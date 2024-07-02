@@ -5,7 +5,7 @@
 
 TCHAR module_path[MAX_PATH] = {};
 
-extern "C" __declspec(dllexport) class IDirect3D9* Direct3DCreate9(UINT SDKVersion)
+extern "C" __declspec(dllexport) class IDirect3D9* Direct3DCreate9Ex(UINT SDKVersion, class IDirect3D9Ex** unnamedParam2)
 {
 	auto library_list = std::wifstream(
 		// Strip the filename part from the module path, then add 'chainload.txt'.
@@ -29,9 +29,9 @@ extern "C" __declspec(dllexport) class IDirect3D9* Direct3DCreate9(UINT SDKVersi
 	TCHAR system_dir[MAX_PATH];
 	GetSystemDirectory(system_dir, MAX_PATH);
 
-	// Load the real d3d9.dll, get the 'Direct3DCreate9' function, call it, and return the result.
+	// Load the real d3d9.dll, get the 'Direct3DCreate9Ex' function, call it, and return the result.
 	const auto real_d3d9 = LoadLibrary(std::filesystem::path(system_dir).append("d3d9.dll").c_str());
-	return reinterpret_cast<decltype(&Direct3DCreate9)>(GetProcAddress(real_d3d9, "Direct3DCreate9"))(SDKVersion);
+	return reinterpret_cast<decltype(&Direct3DCreate9Ex)>(GetProcAddress(real_d3d9, "Direct3DCreate9Ex"))(SDKVersion, unnamedParam2);
 }
 
 BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID)
