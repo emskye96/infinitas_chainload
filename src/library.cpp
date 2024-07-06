@@ -5,7 +5,7 @@
 
 TCHAR module_path[MAX_PATH] = {};
 
-extern "C" __declspec(dllexport) class IDirect3D9* Direct3DCreate9Ex(UINT SDKVersion, class IDirect3D9Ex** unnamedParam2)
+extern "C" __declspec(dllexport) HRESULT Direct3DCreate9Ex(UINT SDKVersion, class IDirect3D9Ex** unnamedParam2)
 {
 	auto library_list = std::wifstream(
 		// Strip the filename part from the module path, then add 'chainload.txt'.
